@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { getActiveStudios } from '@/lib/constants/studios'
+import { getActiveStudios, getStudio } from '@/lib/constants/studios'
 import { formatRelativeTime } from '@/lib/utils'
 
 export const metadata = { title: 'لوحة التحكم' }
@@ -32,7 +32,8 @@ export default async function DashboardPage() {
   const totalConversations = conversationsRes.count ?? 0
   const profile = profileRes.data
   const recentGenerations = generationsRes.data ?? []
-  const studios = getActiveStudios().slice(0, 6)
+  // جميع الاستوديوهات الـ 11
+  const studios = getActiveStudios()
 
   const stats = [
     { label: 'إجمالي التوليدات', value: totalGenerations, icon: '✨', color: 'text-brand-400' },
@@ -61,10 +62,12 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Quick Access Studios */}
+        {/* All Studios Grid */}
         <div className="lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">وصول سريع للاستوديوهات</h2>
+            <h2 className="text-base font-semibold text-white">
+              الاستوديوهات ({studios.length})
+            </h2>
             <Link href="/studios" className="text-xs text-brand-400 hover:text-brand-300">
               عرض الكل ←
             </Link>
@@ -74,16 +77,21 @@ export default async function DashboardPage() {
               <Link
                 key={studio.slug}
                 href={studio.href}
-                className="studio-card group flex items-center gap-3 p-4"
+                className={`studio-card group flex items-center gap-3 p-3 ${
+                  studio.comingSoon ? 'opacity-75' : ''
+                }`}
               >
                 <div
-                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-lg"
+                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-base"
                   style={{ background: `${studio.color}20` }}
                 >
                   {studio.icon}
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{studio.nameAr}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium text-white truncate">{studio.nameAr}</p>
+                  {studio.comingSoon && (
+                    <p className="text-[10px] text-amber-400">Beta</p>
+                  )}
                 </div>
               </Link>
             ))}
@@ -109,18 +117,24 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <ul className="divide-y divide-slate-800">
-                {recentGenerations.map((gen) => (
-                  <li key={gen.id} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800/50 transition-colors">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-300 truncate">
-                        {gen.title ?? `توليد ${gen.studio_slug}`}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {formatRelativeTime(gen.created_at)}
-                      </p>
-                    </div>
-                  </li>
-                ))}
+                {recentGenerations.map((gen) => {
+                  const s = getStudio(gen.studio_slug)
+                  return (
+                    <li key={gen.id} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800/50 transition-colors">
+                      {s && (
+                        <span className="text-base flex-shrink-0">{s.icon}</span>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-slate-300 truncate">
+                          {gen.title ?? `توليد ${gen.studio_slug}`}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {formatRelativeTime(gen.created_at)}
+                        </p>
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </div>

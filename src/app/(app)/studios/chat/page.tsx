@@ -14,11 +14,10 @@ export default function ChatStudioPage() {
 
   const { conversations, loading: convsLoading, deleteConversation, renameConversation, refetch } = useConversations()
 
-  const { messages, isLoading, sendMessage, stopGeneration, clearMessages } = useChat({
+  const { messages, isLoading, error, sendMessage, stopGeneration, clearMessages } = useChat({
     assistantType,
     onConversationCreated: (newId) => {
       refetch()
-      // Update URL without full navigation
       router.replace(`/studios/chat/${newId}`, { scroll: false })
     },
   })
@@ -43,6 +42,18 @@ export default function ChatStudioPage() {
 
       {/* Chat area */}
       <div className="flex-1 flex flex-col overflow-hidden bg-slate-950">
+        {/* Error Banner */}
+        {error && (
+          <div className="flex items-center gap-2 border-b border-red-500/20 bg-red-500/5 px-4 py-2">
+            <span className="text-sm text-red-400">❌ {error}</span>
+            <button
+              onClick={clearMessages}
+              className="mr-auto text-xs text-red-400 hover:text-red-300 underline"
+            >
+              مسح
+            </button>
+          </div>
+        )}
         <ChatWindow
           messages={messages}
           isLoading={isLoading}

@@ -140,7 +140,6 @@ export const STUDIOS: StudioConfig[] = [
     isActive: true,
     isPremium: false,
     sortOrder: 10,
-    comingSoon: true,
   },
   {
     slug: 'books-tools',

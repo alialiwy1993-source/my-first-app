@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { STUDIOS } from '@/lib/constants/studios'
@@ -7,14 +8,40 @@ import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/dashboard', icon: '🏠', label: 'لوحة التحكم' },
-  { href: '/studios',   icon: '🎬', label: 'الاستوديوهات' },
   { href: '/history',   icon: '🕐', label: 'السجل' },
 ]
 
-const QUICK_STUDIOS = STUDIOS.filter((s) => s.sortOrder <= 5 && s.isActive)
+// Studio groups for organized sidebar
+const STUDIO_GROUPS = [
+  {
+    label: '📝 النصوص',
+    slugs: ['chat', 'articles', 'translation', 'research', 'social'],
+  },
+  {
+    label: '🎬 الإبداع',
+    slugs: ['channel-analyzer', 'thumbnails', 'social'],
+  },
+  {
+    label: '🎨 الوسائط',
+    slugs: ['images', 'audio', 'video'],
+  },
+  {
+    label: '📚 المعرفة',
+    slugs: ['books-tools', 'research', 'channel-analyzer', 'thumbnails'],
+  },
+]
+
+// Flat ordered list — all 11 studios
+const ALL_STUDIOS = STUDIOS.filter((s) => s.isActive).sort((a, b) => a.sortOrder - b.sortOrder)
 
 export default function AppSidebar() {
   const pathname = usePathname()
+  const [expanded, setExpanded] = useState(false)
+
+  // Show first 6 by default, expand to show all
+  const VISIBLE_COUNT = expanded ? ALL_STUDIOS.length : 6
+  const visibleStudios = ALL_STUDIOS.slice(0, VISIBLE_COUNT)
+  const hiddenCount = ALL_STUDIOS.length - 6
 
   return (
     <aside className="hidden lg:flex w-64 flex-shrink-0 flex-col border-l border-slate-800 bg-slate-900/60">
@@ -27,55 +54,73 @@ export default function AppSidebar() {
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 no-scrollbar">
         {/* Main Nav */}
-        <div className="space-y-0.5 mb-6">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'sidebar-item',
-                pathname === item.href && 'active'
-              )}
-            >
-              <span className="text-base">{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
+        <div className="space-y-0.5 mb-4">
+          <Link
+            href="/dashboard"
+            className={cn('sidebar-item', pathname === '/dashboard' && 'active')}
+          >
+            <span className="text-base">🏠</span>
+            <span>لوحة التحكم</span>
+          </Link>
+          <Link
+            href="/studios"
+            className={cn('sidebar-item', pathname === '/studios' && 'active')}
+          >
+            <span className="text-base">🎬</span>
+            <span>الاستوديوهات</span>
+          </Link>
+          <Link
+            href="/history"
+            className={cn('sidebar-item', pathname === '/history' && 'active')}
+          >
+            <span className="text-base">🕐</span>
+            <span>السجل</span>
+          </Link>
         </div>
 
         {/* Studios Section */}
-        <div className="mb-2 px-3">
+        <div className="mb-2 px-3 flex items-center justify-between">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
             الاستوديوهات
           </p>
+          <span className="text-[10px] text-slate-600">{ALL_STUDIOS.length}</span>
         </div>
+
         <div className="space-y-0.5">
-          {QUICK_STUDIOS.map((studio) => (
-            <Link
-              key={studio.slug}
-              href={studio.href}
-              className={cn(
-                'sidebar-item',
-                pathname.startsWith(studio.href) && 'active'
-              )}
+          {visibleStudios.map((studio) => {
+            const isActive = pathname.startsWith(studio.href)
+            return (
+              <Link
+                key={studio.slug}
+                href={studio.href}
+                className={cn(
+                  'sidebar-item group',
+                  isActive && 'active'
+                )}
+              >
+                <span className="text-base flex-shrink-0">{studio.icon}</span>
+                <span className="truncate flex-1 min-w-0">{studio.nameAr}</span>
+                {studio.comingSoon && (
+                  <span className="flex-shrink-0 rounded-full bg-slate-700 px-1.5 py-0.5 text-[9px] text-slate-400">
+                    Beta
+                  </span>
+                )}
+              </Link>
+            )
+          })}
+
+          {/* Expand/Collapse toggle */}
+          {hiddenCount > 0 && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="sidebar-item w-full text-brand-400 hover:text-brand-300"
             >
-              <span className="text-base">{studio.icon}</span>
-              <span className="truncate">{studio.nameAr}</span>
-              {studio.comingSoon && (
-                <span className="mr-auto rounded-full bg-slate-700 px-1.5 py-0.5 text-[9px] text-slate-400">
-                  قريباً
-                </span>
-              )}
-            </Link>
-          ))}
-          {/* Link to all studios */}
-          <Link
-            href="/studios"
-            className="sidebar-item text-brand-400 hover:text-brand-300"
-          >
-            <span className="text-base">✨</span>
-            <span>عرض الكل</span>
-          </Link>
+              <span className="text-base">{expanded ? '▲' : '▼'}</span>
+              <span className="text-xs">
+                {expanded ? 'إخفاء' : `${hiddenCount} استوديو أخرى`}
+              </span>
+            </button>
+          )}
         </div>
 
         {/* Bottom nav */}
