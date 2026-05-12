@@ -122,7 +122,41 @@ export interface AiTool {
 }
 
 
-export interface GeneratedImage {
+export interface GeneratedAudio {
+  id: string
+  user_id: string
+  generation_id: string | null
+  text_input: string
+  voice: string | null
+  language: string
+  model: string | null
+  audio_url: string
+  storage_path: string | null
+  duration_seconds: number | null
+  speed?: number | null
+  file_size?: number | null
+  status?: string | null
+  metadata?: Json | null
+  created_at: string
+}
+
+export interface GeneratedVideo {
+  id: string
+  user_id: string
+  generation_id: string | null
+  prompt: string
+  platform?: string | null
+  video_type?: string | null
+  video_url: string | null
+  storage_path: string | null
+  provider: string | null
+  status: string
+  duration_seconds: number | null
+  script?: string | null
+  scenes?: Json | null
+  metadata: Json | null
+  created_at: string
+}
   id: string
   user_id: string
   generation_id: string | null

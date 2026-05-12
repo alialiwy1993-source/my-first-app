@@ -13,6 +13,7 @@ import { buildSocialPrompt, SOCIAL_SYSTEM_PROMPT, type SocialInput } from '@/lib
 import { buildChannelAnalyzerPrompt, CHANNEL_ANALYZER_SYSTEM_PROMPT, type ChannelAnalyzerInput } from '@/lib/openai/prompts/channel-analyzer'
 import { buildThumbnailPrompt, THUMBNAILS_SYSTEM_PROMPT, type ThumbnailInput } from '@/lib/openai/prompts/thumbnails'
 import { buildBooksToolsPrompt, BOOKS_TOOLS_SYSTEM_PROMPT, type BooksToolsInput } from '@/lib/openai/prompts/books-tools'
+import { buildVideoPrompt, VIDEO_SYSTEM_PROMPT, type VideoInput } from '@/lib/openai/prompts/video'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -66,6 +67,13 @@ function buildPrompt(
         user: buildBooksToolsPrompt(input as unknown as BooksToolsInput),
       }
 
+    // ── Milestone 4 ──────────────────────────────────
+    case 'video':
+      return {
+        system: VIDEO_SYSTEM_PROMPT,
+        user: buildVideoPrompt(input as unknown as VideoInput),
+      }
+
     default:
       return null
   }
@@ -93,6 +101,8 @@ function extractTitle(studio: string, input: Record<string, unknown>): string {
       return get('videoTitle') || 'صورة مصغرة جديدة'
     case 'books-tools':
       return get('bookTitle') || get('field') || 'اكتشاف جديد'
+    case 'video':
+      return get('idea') ? `فيديو: ${get('idea')}` : 'سكربت فيديو جديد'
     default:
       return `توليد ${studio}`
   }
@@ -184,6 +194,29 @@ export async function POST(request: NextRequest, { params }: Params) {
       action: 'generate',
       tokens_used: tokensUsed,
     })
+
+    // ── For video studio: save to generated_videos ──
+    if (studio === 'video' && content) {
+      const videoInput = input as Record<string, unknown>
+      await supabase.from('generated_videos').insert({
+        user_id: user.id,
+        generation_id: generation?.id ?? null,
+        prompt: String(videoInput.idea ?? '').slice(0, 500),
+        platform: String(videoInput.platform ?? 'youtube'),
+        video_type: String(videoInput.videoType ?? 'educational'),
+        duration_seconds: null,
+        script: content.slice(0, 10000),
+        status: 'script_ready',
+        metadata: {
+          duration: videoInput.duration,
+          style: videoInput.style,
+          tone: videoInput.tone,
+          audience: videoInput.targetAudience,
+        },
+      }).then(({ error }) => {
+        if (error) console.warn('[video] generated_videos insert:', error.message)
+      })
+    }
 
     return NextResponse.json({
       output: content,
