@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'تسجيل الدخول',
 }
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col">
       {/* Header */}

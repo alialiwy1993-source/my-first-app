@@ -62,22 +62,26 @@ export async function POST(request: NextRequest, { params }: Params) {
     const durationMs = Date.now() - startTime
 
     // حفظ التوليد في DB
+    const titleField = studio === 'articles' ? 'topic' : studio === 'translation' ? 'text' : 'topic'
+    const rawTitle = (input as Record<string, unknown>)?.[titleField]
+    const generationTitle = rawTitle
+      ? String(rawTitle).slice(0, 80)
+      : `توليد ${studio}`
+
     const { data: generation, error: saveError } = await supabase
       .from('studio_generations')
       .insert({
         user_id: user.id,
         studio_slug: studio,
-        prompt: promptData.user.slice(0, 500), // أول 500 حرف كمعاينة
+        prompt: promptData.user.slice(0, 500),
         input,
         output: content,
-        output_format: 'markdown',
+        output_format: studio === 'translation' ? 'text' : 'markdown',
         model: usedModel,
         tokens_used: tokensUsed,
         duration_ms: durationMs,
         status: 'completed',
-        title: (input as Record<string, unknown>)?.topic
-          ? String((input as Record<string, unknown>).topic).slice(0, 80)
-          : `توليد ${studio}`,
+        title: generationTitle,
       })
       .select()
       .single()

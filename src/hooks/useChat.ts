@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import type { ChatMessage } from '@/types/chat'
 import type { AssistantType } from '@/types/database'
 import { generateId } from '@/lib/utils'
@@ -19,7 +20,7 @@ interface UseChatReturn {
   sendMessage: (content: string) => Promise<void>
   stopGeneration: () => void
   clearMessages: () => void
-  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
+  setMessages: Dispatch<SetStateAction<ChatMessage[]>>
 }
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {

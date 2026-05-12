@@ -1,5 +1,6 @@
 'use client'
 
+import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -12,7 +13,7 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleReset = async (e: React.FormEvent) => {
+  const handleReset = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
 
@@ -64,9 +65,7 @@ export default function ResetPasswordPage() {
 
       <form onSubmit={handleReset} className="space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-300">
-            كلمة المرور الجديدة
-          </label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-300">كلمة المرور الجديدة</label>
           <input
             type="password"
             value={password}
@@ -78,9 +77,7 @@ export default function ResetPasswordPage() {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-300">
-            تأكيد كلمة المرور
-          </label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-300">تأكيد كلمة المرور</label>
           <input
             type="password"
             value={confirmPassword}

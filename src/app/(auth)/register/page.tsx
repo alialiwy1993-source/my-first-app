@@ -1,12 +1,11 @@
 'use client'
 
+import type { FormEvent } from 'react'
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -15,7 +14,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
 
@@ -92,7 +91,6 @@ export default function RegisterPage() {
             className="input-base"
           />
         </div>
-
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-300">البريد الإلكتروني</label>
           <input
@@ -105,7 +103,6 @@ export default function RegisterPage() {
             dir="ltr"
           />
         </div>
-
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-300">كلمة المرور</label>
           <input
@@ -118,7 +115,6 @@ export default function RegisterPage() {
             dir="ltr"
           />
         </div>
-
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-300">تأكيد كلمة المرور</label>
           <input
@@ -131,7 +127,6 @@ export default function RegisterPage() {
             dir="ltr"
           />
         </div>
-
         <button type="submit" disabled={loading} className="btn-primary w-full py-3">
           {loading ? 'جاري الإنشاء...' : 'إنشاء الحساب'}
         </button>
