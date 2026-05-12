@@ -40,54 +40,99 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-## الخطوة 3: تشغيل Migrations
+## الخطوة 3: تشغيل Migrations (بالترتيب)
 
-من **SQL Editor** في Supabase Dashboard:
+> شغّل كل migration من **SQL Editor** في Supabase Dashboard:
+> اضغط **New Query** → انسخ المحتوى → اضغط **Run**
 
-### Migration 1: الجداول
-1. اضغط **New Query**
-2. انسخ محتوى `supabase/migrations/001_init_schema.sql`
-3. اضغط **Run** ✅
+| # | الملف | المحتوى | مطلوب |
+|---|-------|---------|-------|
+| 001 | `001_init_schema.sql` | كل الجداول الأساسية (12 جدول) | ✅ |
+| 002 | `002_rls_policies.sql` | سياسات الأمان RLS | ✅ |
+| 003 | `003_triggers.sql` | Triggers (auto-create profile, updated_at, usage_count) | ✅ |
+| 004 | `004_storage_buckets.sql` | Storage buckets + policies | ✅ |
+| 005 | `005_seed_studios.sql` | بيانات الاستوديوهات وأدوات AI الأولية | ✅ |
+| 006 | `006_images_metadata.sql` | أعمدة إضافية لـ generated_images (M3) | ✅ |
+| 007 | `007_audio_video_enhance.sql` | أعمدة إضافية لـ generated_audio + generated_videos (M4) | ✅ |
 
-### Migration 2: سياسات RLS
-1. اضغط **New Query**
-2. انسخ محتوى `supabase/migrations/002_rls_policies.sql`
-3. اضغط **Run** ✅
+### Migration 001 — الجداول الأساسية
+```
+supabase/migrations/001_init_schema.sql
+```
+ينشئ الجداول: `profiles`, `studios`, `studio_generations`, `conversations`, `messages`,
+`user_files`, `generated_images`, `generated_audio`, `generated_videos`,
+`research_projects`, `research_sections`, `user_usage`, `ai_tools`
 
-### Migration 3: Triggers
-1. اضغط **New Query**
-2. انسخ محتوى `supabase/migrations/003_triggers.sql`
-3. اضغط **Run** ✅
+### Migration 002 — سياسات RLS
+```
+supabase/migrations/002_rls_policies.sql
+```
+يفعّل Row Level Security على جميع الجداول ويُنشئ policies (المستخدم يرى بياناته فقط).
 
-### Migration 4: Storage Buckets
-1. اضغط **New Query**
-2. انسخ محتوى `supabase/migrations/004_storage_buckets.sql`
-3. اضغط **Run** ✅
+### Migration 003 — Triggers
+```
+supabase/migrations/003_triggers.sql
+```
+- `handle_new_user`: ينشئ profile تلقائياً عند تسجيل مستخدم جديد
+- `update_updated_at`: يُحدّث `updated_at` عند كل تعديل
+- `increment_usage_count`: يزيد عدّاد الاستخدام عند كل توليد
 
-### Migration 5: البيانات الأولية
-1. اضغط **New Query**
-2. انسخ محتوى `supabase/migrations/005_seed_studios.sql`
-3. اضغط **Run** ✅
+### Migration 004 — Storage Buckets
+```
+supabase/migrations/004_storage_buckets.sql
+```
+ينشئ buckets: `user-uploads`, `generated-images`, `generated-audio`, `generated-videos`, `avatars`  
++ policies للوصول (كل مستخدم يرى ملفاته فقط).
 
-### التحقق من الجداول
-بعد تشغيل المigrations، من **Table Editor** يجب أن ترى:
-- `profiles`
-- `studios` (تحتوي على 11 صف)
-- `studio_generations`
-- `conversations`
-- `messages`
-- `user_files`
-- `generated_images`
-- `generated_audio`
-- `generated_videos`
-- `research_projects`
-- `research_sections`
-- `user_usage`
-- `ai_tools` (تحتوي على 8 أدوات)
+### Migration 005 — Seed Data
+```
+supabase/migrations/005_seed_studios.sql
+```
+يُدخل 11 استوديو + 8 أدوات AI في الجداول.
+
+### Migration 006 — Image Studio Enhancements (M3)
+```
+supabase/migrations/006_images_metadata.sql
+```
+يضيف أعمدة `metadata` و `quality` لجدول `generated_images` (آمن للتشغيل مرات متعددة).
+
+### Migration 007 — Audio & Video Enhancements (M4)
+```
+supabase/migrations/007_audio_video_enhance.sql
+```
+يضيف أعمدة لـ `generated_audio` (`speed`, `metadata`, `status`, `file_size`)
+ولـ `generated_videos` (`platform`, `video_type`, `script`, `scenes`).
+> ⚠️ **ملاحظة:** لا تضيف هذه الـ migration سياسات storage جديدة — storage policies موجودة في 004.
 
 ---
 
-## الخطوة 4: إعداد Authentication
+## الخطوة 4: التحقق من الجداول
+
+بعد تشغيل جميع الـ migrations، من **Table Editor** يجب أن ترى:
+- ✅ `profiles`
+- ✅ `studios` (11 صف — 11 استوديو)
+- ✅ `studio_generations`
+- ✅ `conversations`
+- ✅ `messages`
+- ✅ `user_files`
+- ✅ `generated_images`
+- ✅ `generated_audio`
+- ✅ `generated_videos`
+- ✅ `research_projects`
+- ✅ `research_sections`
+- ✅ `user_usage`
+- ✅ `ai_tools` (8 أدوات)
+
+من **Storage**، يجب أن ترى:
+- ✅ `user-uploads`
+- ✅ `generated-images`
+- ✅ `generated-audio`
+- ✅ `generated-videos`
+- ✅ `avatars`
+
+---
+
+## الخطوة 5: إعداد Authentication
 
 ### Email (مفعّل افتراضياً)
 من **Authentication** → **Providers** → **Email**:
@@ -116,7 +161,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-## الخطوة 5: إعداد URL Configuration
+## الخطوة 6: إعداد URL Configuration
 
 من **Authentication** → **URL Configuration**:
 
@@ -134,19 +179,6 @@ https://your-app.vercel.app/auth/callback
 
 ---
 
-## الخطوة 6: Storage (اختياري — للصور والملفات)
-
-من **Storage**، تأكد أن هذه الـ buckets موجودة:
-- `user-uploads`
-- `generated-images`
-- `generated-audio`
-- `generated-videos`
-- `avatars`
-
-إذا لم تُنشأ من migration 004، أنشئها يدوياً من **Storage** → **New Bucket**.
-
----
-
 ## الخطوة 7: إنشاء أول مستخدم Admin
 
 بعد تسجيل حسابك عبر التطبيق، شغّل هذا في SQL Editor:
@@ -161,18 +193,35 @@ WHERE email = 'your-email@example.com';
 
 ## ✅ قائمة التحقق النهائية
 
+### Supabase Setup
 - [ ] إنشاء مشروع Supabase
 - [ ] نسخ مفاتيح الاتصال إلى `.env.local`
-- [ ] تشغيل Migration 001 (الجداول)
-- [ ] تشغيل Migration 002 (RLS)
+- [ ] تشغيل Migration 001 (الجداول الأساسية)
+- [ ] تشغيل Migration 002 (RLS Policies)
 - [ ] تشغيل Migration 003 (Triggers)
-- [ ] تشغيل Migration 004 (Storage)
+- [ ] تشغيل Migration 004 (Storage Buckets)
 - [ ] تشغيل Migration 005 (Seed Data)
+- [ ] تشغيل Migration 006 (Image Studio - M3)
+- [ ] تشغيل Migration 007 (Audio & Video - M4)
+- [ ] التحقق من وجود 13 جدول في Table Editor
+- [ ] التحقق من وجود 5 buckets في Storage
 - [ ] التحقق من وجود 11 استوديو في جدول `studios`
 - [ ] إعداد Email Authentication
 - [ ] إعداد Site URL و Redirect URLs
 - [ ] (اختياري) إعداد Google OAuth
 - [ ] تشغيل `npm run dev` والتسجيل بحساب جديد
+
+### Environment Variables (`.env.local`)
+```env
+OPENAI_API_KEY=sk-...
+OPENAI_DEFAULT_MODEL=gpt-4o-mini
+OPENAI_IMAGE_MODEL=dall-e-3
+OPENAI_TTS_MODEL=tts-1
+NEXT_PUBLIC_SUPABASE_URL=https://...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
 ---
 
@@ -192,3 +241,19 @@ WHERE email = 'your-email@example.com';
 
 ### لا ترى الاستوديوهات
 ← تأكد أنك شغّلت Migration 005 (Seed Data)
+
+### رفع الصور لا يعمل (Image Studio)
+← تأكد أنك شغّلت Migration 004 (Storage Buckets) وأن bucket `generated-images` موجود
+
+### رفع الصوت لا يعمل (Audio Studio)
+← تأكد أنك شغّلت Migration 004 (Storage Buckets) وأن bucket `generated-audio` موجود
+← الـ fallback: إذا فشل الرفع، الصوت يُعاد كـ base64 data URL ويعمل في المشغّل مباشرة
+
+### جدول generated_audio لا يحتوي على عمود speed
+← تأكد أنك شغّلت Migration 007
+
+### خطأ "duplicate key value violates unique constraint" في storage policies
+← إذا شغّلت Migration 007 القديمة (قبل الإصلاح)، استخدم النسخة المحدّثة التي لا تُعيد إنشاء policies موجودة
+
+### لا ترى metadata في generated_images
+← تأكد أنك شغّلت Migration 006

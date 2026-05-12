@@ -121,7 +121,30 @@ export interface AiTool {
   created_at: string
 }
 
+// =====================================================
+// M3 — Image Generation
+// =====================================================
+export interface GeneratedImage {
+  id: string
+  user_id: string
+  generation_id: string | null
+  prompt: string
+  negative_prompt: string | null
+  style: string | null
+  size: string | null
+  model: string | null
+  image_url: string
+  storage_path: string | null
+  thumbnail_url: string | null
+  is_favorite: boolean
+  quality?: string | null
+  metadata?: Json | null
+  created_at: string
+}
 
+// =====================================================
+// M4 — Audio Generation
+// =====================================================
 export interface GeneratedAudio {
   id: string
   user_id: string
@@ -140,6 +163,9 @@ export interface GeneratedAudio {
   created_at: string
 }
 
+// =====================================================
+// M4 — Video Generation
+// =====================================================
 export interface GeneratedVideo {
   id: string
   user_id: string
@@ -155,21 +181,5 @@ export interface GeneratedVideo {
   script?: string | null
   scenes?: Json | null
   metadata: Json | null
-  created_at: string
-}
-  id: string
-  user_id: string
-  generation_id: string | null
-  prompt: string
-  negative_prompt: string | null
-  style: string | null
-  size: string | null
-  model: string | null
-  image_url: string
-  storage_path: string | null
-  thumbnail_url: string | null
-  is_favorite: boolean
-  quality?: string | null
-  metadata?: Json | null
   created_at: string
 }

@@ -59,10 +59,6 @@ VALUES ('generated-audio', 'generated-audio', FALSE, 52428800,
   ARRAY['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg'])
 ON CONFLICT (id) DO NOTHING;
 
--- Storage RLS: audio files per user
-CREATE POLICY "Users can access own audio files"
-  ON storage.objects FOR ALL
-  USING (
-    bucket_id = 'generated-audio'
-    AND auth.uid()::text = (storage.foldername(name))[1]
-  );
+-- NOTE: Storage RLS policy for generated-audio is already created in migration 004.
+-- The bucket insert above (ON CONFLICT DO NOTHING) is safe to re-run.
+-- No additional policy needed here.

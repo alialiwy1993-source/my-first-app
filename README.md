@@ -10,21 +10,21 @@
 
 ---
 
-## 🎬 الاستوديوهات المتاحة
+## 🎬 الاستوديوهات (11 استوديو)
 
-| # | الاستوديو | الوصف | الحالة |
-|---|-----------|-------|--------|
-| 1 | 💬 استوديو المحادثة | محادثة AI متعددة الأنواع مع حفظ السجل | ✅ M1 |
-| 2 | ✍️ استوديو المقالات | مقالات SEO، تقنية، تسويقية | ✅ M1 |
-| 3 | 🌐 استوديو الترجمة | ترجمة أكاديمية، تسويقية، تقنية | ✅ M1 |
-| 4 | 🎓 استوديو الأبحاث | مساعدة ماجستير ودكتوراه | 🔜 M2 |
-| 5 | 🎥 استوديو السوشيال | يوتيوب، تيك توك، إنستغرام | 🔜 M2 |
-| 6 | 📊 تحليل القنوات | تحليل وتحسين القنوات | 🔜 M2 |
-| 7 | 🖼️ الصور المصغرة | prompts وأفكار thumbnails | 🔜 M2 |
-| 8 | 🎨 توليد الصور | DALL·E 3 + معرض + تنزيل | ✅ M3 |
-| 9 | 🔊 توليد الصوت | OpenAI TTS | 🔜 M4 |
-| 10 | 🎞️ توليد الفيديو | واجهة + stub | 🔜 M4 |
-| 11 | 📚 الكتب وأدوات AI | تلخيص + دليل أدوات | ✅ M2 |
+| # | الاستوديو | الوصف | M |
+|---|-----------|-------|---|
+| 1 | 💬 **المحادثة** | محادثة AI مع 6 أنواع مساعدين + streaming + حفظ المحادثات | M1 |
+| 2 | ✍️ **المقالات** | مقالات SEO / تقنية / تسويقية / تعليمية | M1 |
+| 3 | 🌐 **الترجمة** | ترجمة + تحسين + إعادة صياغة + كشف أخطاء | M1 |
+| 4 | 🎓 **الأبحاث** | مساعد أكاديمي للبكالوريوس / ماجستير / دكتوراه | M2 |
+| 5 | 🎥 **السوشيال** | محتوى يوتيوب + تيك توك + إنستغرام + Reels | M2 |
+| 6 | 📊 **تحليل القنوات** | تحليل قناتك + نقاط قوة/ضعف + اقتراحات | M2 |
+| 7 | 🖼️ **الصور المصغرة** | أفكار + نصوص + ألوان + Prompts للثمبنيل | M2 |
+| 8 | 📚 **الكتب وأدوات AI** | تلخيص + خطة قراءة + دليل أدوات AI | M2 |
+| 9 | 🎨 **توليد الصور** | DALL·E 3 + 8 أنماط + معرض + تنزيل | M3 |
+| 10 | 🔊 **توليد الصوت** | OpenAI TTS + 6 أصوات + تنزيل MP3 | M4 |
+| 11 | 🎞️ **توليد الفيديو** | سكربت + مشاهد + Prompts (ربط API الفيديو قادم) | M4 |
 
 ---
 
@@ -32,30 +32,43 @@
 
 ### المتطلبات
 - Node.js 18+
-- npm أو yarn
+- مفتاح [OpenAI API](https://platform.openai.com/api-keys)
 - حساب [Supabase](https://supabase.com) (مجاني)
-- مفتاح [OpenAI API](https://platform.openai.com)
 
-### 1. استنساخ المشروع
+### التثبيت
 ```bash
-git clone https://github.com/alialiwy1993-source/ai-universal-assistant.git
-cd ai-universal-assistant
+git clone https://github.com/alialiwy1993-source/my-first-app.git -b ai-studio-platform
+cd my-first-app
 npm install
 ```
 
-### 2. إعداد المتغيرات البيئية
+### إعداد المتغيرات البيئية
 ```bash
 cp .env.example .env.local
 ```
-افتح `.env.local` وأضف قيمك (راجع [دليل Supabase](#-دليل-إعداد-supabase)):
+ثم أضف قيمك في `.env.local` (راجع [دليل Supabase](docs/supabase-setup.md)):
+
 ```env
 OPENAI_API_KEY=sk-...
+OPENAI_DEFAULT_MODEL=gpt-4o-mini
+OPENAI_IMAGE_MODEL=dall-e-3
+OPENAI_TTS_MODEL=tts-1
 NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
 ```
 
-### 3. تشغيل المشروع
+### إعداد Supabase
+راجع [`docs/supabase-setup.md`](docs/supabase-setup.md) للإرشادات الكاملة.
+
+**الخلاصة:** شغّل الـ 7 migrations بالترتيب من Supabase SQL Editor:
+```
+001_init_schema.sql → 002_rls_policies.sql → 003_triggers.sql
+004_storage_buckets.sql → 005_seed_studios.sql
+006_images_metadata.sql → 007_audio_video_enhance.sql
+```
+
+### تشغيل المشروع
 ```bash
 npm run dev
 ```
@@ -63,117 +76,117 @@ npm run dev
 
 ---
 
-## 📋 دليل إعداد Supabase
-
-### الخطوة 1 — إنشاء مشروع جديد
-1. اذهب إلى [supabase.com](https://supabase.com) وسجّل الدخول
-2. اضغط **New Project**
-3. اختر Organization واسم المشروع وكلمة مرور DB
-4. اختر المنطقة الأقرب لك (ينصح بـ EU West أو US East)
-5. انتظر حتى يكتمل الإنشاء (~1 دقيقة)
-
-### الخطوة 2 — جلب مفاتيح الاتصال
-من **Settings → API**:
-- `Project URL` → ضعها في `NEXT_PUBLIC_SUPABASE_URL`
-- `anon public` key → ضعها في `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `service_role` key → ضعها في `SUPABASE_SERVICE_ROLE_KEY` (**سري — لا تشاركه**)
-
-### الخطوة 3 — تشغيل Migrations
-من **SQL Editor** في Supabase Dashboard، شغّل الملفات بالترتيب:
-
-```sql
--- 1. الجداول الأساسية
--- انسخ محتوى: supabase/migrations/001_init_schema.sql
-
--- 2. سياسات الأمان
--- انسخ محتوى: supabase/migrations/002_rls_policies.sql
-
--- 3. الـ Triggers
--- انسخ محتوى: supabase/migrations/003_triggers.sql
-
--- 4. Storage Buckets
--- انسخ محتوى: supabase/migrations/004_storage_buckets.sql
-
--- 5. البيانات الأولية (studios + أدوات AI)
--- انسخ محتوى: supabase/migrations/005_seed_studios.sql
-```
-
-> **نصيحة:** شغّل كل ملف منفرداً وتأكد أنه نجح قبل الانتقال للتالي.
-
-### الخطوة 4 — إعداد Authentication
-من **Authentication → Providers**:
-1. **Email** → تأكد أنه مفعّل ✅
-2. **Google** (اختياري):
-   - اذهب إلى [Google Cloud Console](https://console.cloud.google.com)
-   - أنشئ OAuth 2.0 credentials
-   - أضف Redirect URL: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
-   - انسخ Client ID و Secret إلى Supabase
-
-### الخطوة 5 — إعداد Email Templates (اختياري)
-من **Authentication → Email Templates**، يمكنك تخصيص:
-- رسالة تأكيد البريد
-- رسالة استعادة كلمة المرور
-
-### الخطوة 6 — URL Configuration
-من **Authentication → URL Configuration**:
-- **Site URL**: `http://localhost:3000` (للتطوير) أو رابط Vercel (للإنتاج)
-- **Redirect URLs**: أضف `http://localhost:3000/auth/callback`
-
----
-
 ## 🏗️ هيكل المشروع
 
 ```
-ai-universal-assistant/
-├── src/
-│   ├── app/
-│   │   ├── (auth)/          # صفحات تسجيل الدخول والتسجيل
-│   │   ├── (app)/           # صفحات المحمية (dashboard, studios...)
-│   │   ├── api/             # API Routes
-│   │   └── layout.tsx       # Root layout (RTL + Dark)
-│   ├── components/
-│   │   ├── layout/          # Sidebar, Topbar
-│   │   └── studios/         # مكونات الاستوديوهات
-│   ├── lib/
-│   │   ├── supabase/        # Clients (browser/server/admin)
-│   │   ├── openai/          # Client + Prompts
-│   │   ├── constants/       # Studios, Models, Limits
-│   │   ├── validators/      # Zod schemas
-│   │   └── i18n/            # النصوص العربية
-│   ├── hooks/               # React hooks
-│   └── types/               # TypeScript types
-├── supabase/
-│   └── migrations/          # SQL files (001-005)
-└── docs/
+src/
+├── app/
+│   ├── (auth)/              # Login / Register / Reset Password
+│   ├── (app)/               # Protected pages (Dashboard, Studios...)
+│   │   ├── dashboard/       # لوحة التحكم + إحصائيات
+│   │   ├── studios/         # 11 استوديو + gallery
+│   │   ├── history/         # سجل التوليدات
+│   │   ├── profile/         # الملف الشخصي
+│   │   └── settings/        # الإعدادات
+│   ├── api/                 # API Routes (server-side)
+│   │   ├── chat/            # Streaming chat
+│   │   ├── conversations/   # CRUD للمحادثات
+│   │   ├── generate/[studio]/ # Unified generate endpoint
+│   │   ├── images/generate/ # DALL-E image generation
+│   │   └── audio/generate/  # OpenAI TTS
+│   └── layout.tsx           # Root layout (RTL + Dark)
+├── components/
+│   ├── layout/              # AppSidebar, AppTopbar
+│   ├── studios/             # Studio components + Chat components
+│   └── ui/                  # MarkdownRenderer, Spinner, Toast
+├── hooks/                   # useChat, useUser, useConversations, useGeneration
+├── lib/
+│   ├── supabase/            # browser + server + admin + middleware
+│   ├── openai/              # client + stream + 9 prompt files
+│   ├── constants/           # studios, models, limits
+│   └── utils.ts
+└── types/
+    ├── database.ts          # 10 TypeScript interfaces
+    ├── chat.ts
+    └── studios.ts
 ```
 
 ---
 
-## ⚙️ المتغيرات البيئية
+## 🔌 API Routes
 
-| المتغير | الوصف | مطلوب |
-|---------|-------|--------|
-| `OPENAI_API_KEY` | مفتاح OpenAI API | ✅ |
-| `OPENAI_DEFAULT_MODEL` | الموديل الافتراضي للنص (gpt-4o-mini) | اختياري |
-| `OPENAI_IMAGE_MODEL` | موديل توليد الصور (dall-e-3) | اختياري |
-| `NEXT_PUBLIC_SUPABASE_URL` | رابط مشروع Supabase | ✅ |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | المفتاح العام | ✅ |
-| `SUPABASE_SERVICE_ROLE_KEY` | مفتاح الخدمة (سري) | ✅ |
-| `NEXT_PUBLIC_APP_URL` | رابط التطبيق | اختياري |
-| `FREE_USAGE_LIMIT` | حد الاستخدام المجاني (100) | اختياري |
-| `MAX_PDF_SIZE_MB` | أقصى حجم PDF (10) | اختياري |
+| Method | Endpoint | الاستخدام |
+|--------|----------|-----------|
+| POST | `/api/chat` | Streaming chat (SSE) |
+| GET/POST | `/api/conversations` | قائمة / إنشاء محادثة |
+| GET/PATCH/DELETE | `/api/conversations/[id]` | تفاصيل / تعديل / حذف |
+| POST | `/api/generate/[studio]` | توليد النص (8 استوديوهات) |
+| POST + GET | `/api/images/generate` | DALL·E توليد + قائمة |
+| POST + GET | `/api/audio/generate` | OpenAI TTS توليد + قائمة |
+| GET/PATCH | `/api/user/profile` | الملف الشخصي |
+| GET | `/api/user/stats` | الإحصائيات |
+| PATCH | `/api/user/settings` | الإعدادات |
 
 ---
 
-## 🛠️ الأوامر المتاحة
+## 🗄️ قاعدة البيانات (13 جدول)
+
+| الجدول | الاستخدام |
+|--------|----------|
+| `profiles` | بيانات المستخدمين + الاشتراكات + الإعدادات |
+| `studios` | كتالوج الاستوديوهات (11 استوديو) |
+| `studio_generations` | جدول مركزي لكل التوليدات |
+| `conversations` | محادثات Chat Studio |
+| `messages` | رسائل كل محادثة |
+| `generated_images` | صور DALL·E |
+| `generated_audio` | ملفات TTS |
+| `generated_videos` | سكربتات الفيديو |
+| `research_projects` | مشاريع بحثية |
+| `research_sections` | أقسام كل مشروع |
+| `user_files` | ملفات مرفوعة |
+| `user_usage` | سجل الاستخدام |
+| `ai_tools` | دليل أدوات AI |
+
+---
+
+## ⚙️ متغيرات البيئة
+
+| المتغير | الوصف | القيمة الافتراضية |
+|---------|-------|------------------|
+| `OPENAI_API_KEY` | مفتاح OpenAI | — |
+| `OPENAI_DEFAULT_MODEL` | موديل النصوص | `gpt-4o-mini` |
+| `OPENAI_IMAGE_MODEL` | موديل الصور | `dall-e-3` |
+| `OPENAI_TTS_MODEL` | موديل الصوت | `tts-1` |
+| `NEXT_PUBLIC_SUPABASE_URL` | رابط Supabase | — |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | المفتاح العام | — |
+| `SUPABASE_SERVICE_ROLE_KEY` | مفتاح الخدمة (سري) | — |
+| `NEXT_PUBLIC_APP_URL` | رابط التطبيق | `http://localhost:3000` |
+| `FREE_USAGE_LIMIT` | حد الاستخدام المجاني | `100` |
+
+---
+
+## 🛠️ الأوامر
 
 ```bash
-npm run dev          # تشغيل بيئة التطوير
-npm run build        # بناء المشروع للإنتاج
+npm run dev          # بيئة التطوير
+npm run build        # بناء للإنتاج
 npm run start        # تشغيل الإنتاج
-npm run lint         # فحص الكود
+npm run lint         # فحص ESLint
 npm run type-check   # فحص TypeScript
 ```
+
+---
+
+## 🔒 الأمان
+
+| الميزة | الحالة |
+|--------|--------|
+| RLS على جميع الجداول | ✅ |
+| OpenAI API Key — server-side فقط | ✅ |
+| Supabase Service Role — server-side فقط | ✅ |
+| حماية الصفحات عبر middleware | ✅ |
+| Zod validation على API inputs | ✅ |
+| Storage: كل مستخدم يرى ملفاته فقط | ✅ |
 
 ---
 
@@ -181,36 +194,27 @@ npm run type-check   # فحص TypeScript
 
 1. ادفع الكود إلى GitHub
 2. اذهب إلى [vercel.com](https://vercel.com) وأنشئ مشروعاً جديداً
-3. اربطه بالـ repo
+3. اربطه بالـ repo واختر branch `ai-studio-platform`
 4. أضف **Environment Variables** (نفس `.env.local`)
-5. انقر Deploy 🎉
-
-> **تذكر:** في Supabase، أضف رابط Vercel إلى قائمة الـ Redirect URLs المسموحة.
+5. في Supabase: أضف رابط Vercel إلى **Redirect URLs**
+6. انقر Deploy 🎉
 
 ---
 
-## 🗺️ خطة التطوير
+## 🗺️ Milestones
 
 | Milestone | المحتوى | الحالة |
 |-----------|---------|--------|
-| **M0** | Foundation + Database + Auth | ✅ مكتمل |
-| **M1** | Dashboard + Chat + Articles + Translation | ✅ مكتمل |
+| **M0** | Foundation + DB (12 tables) + Auth + RTL | ✅ مكتمل |
+| **M1** | Chat + Articles + Translation | ✅ مكتمل |
 | **M2** | Research + Social + Channel + Thumbnails + Books | ✅ مكتمل |
 | **M3** | Image Studio (DALL·E 3) + Gallery | ✅ مكتمل |
-| **M4** | Audio + Video Studios | 🔜 |
+| **M4** | Audio Studio (TTS) + Video Studio (Script Gen) | ✅ مكتمل |
+| **M5** | Admin Panel + Analytics | 🔜 |
+| **M6** | Video API (Runway/Pika) + Stripe | 🔜 |
 
 ---
 
-## 🔒 الأمان
-
-- ✅ Row Level Security (RLS) على جميع جداول Supabase
-- ✅ مفاتيح API في Server-side فقط (لا تصل للـ client)
-- ✅ Middleware يحمي الصفحات المحمية
-- ✅ Zod validation على جميع API inputs
-- ✅ Service Role Key لا يُستخدم إلا في Server Components
-
----
-
-## 📝 الترخيص
+## 📄 الترخيص
 
 MIT License — © 2026 AI Universal Assistant
