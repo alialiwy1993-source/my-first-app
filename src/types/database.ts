@@ -120,3 +120,22 @@ export interface AiTool {
   is_active: boolean
   created_at: string
 }
+
+
+export interface GeneratedImage {
+  id: string
+  user_id: string
+  generation_id: string | null
+  prompt: string
+  negative_prompt: string | null
+  style: string | null
+  size: string | null
+  model: string | null
+  image_url: string
+  storage_path: string | null
+  thumbnail_url: string | null
+  is_favorite: boolean
+  quality?: string | null
+  metadata?: Json | null
+  created_at: string
+}

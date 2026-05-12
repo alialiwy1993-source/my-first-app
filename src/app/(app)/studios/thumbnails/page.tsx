@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import StudioLayout, { StudioFormPanel, StudioResultPanel } from '@/components/studios/StudioLayout'
 import GenerationResult from '@/components/studios/GenerationResult'
 import GenerationHistory from '@/components/studios/GenerationHistory'
@@ -248,14 +249,27 @@ export default function ThumbnailsStudioPage() {
         </div>
 
         {activeTab === 'generate' ? (
-          <GenerationResult
-            result={result}
-            isLoading={isLoading}
-            error={error}
-            loadingText="جاري إنشاء الصورة المصغرة..."
-            studioName="صورة-مصغرة"
-            onRegenerate={result ? handleGenerate : undefined}
-          />
+          <>
+            <GenerationResult
+              result={result}
+              isLoading={isLoading}
+              error={error}
+              loadingText="جاري إنشاء الصورة المصغرة..."
+              studioName="صورة-مصغرة"
+              onRegenerate={result ? handleGenerate : undefined}
+            />
+
+            {/* ربط باستوديو الصور — يظهر عند وجود نتيجة من أداة image-prompt */}
+            {result && !isLoading && tool === 'image-prompt' && (
+              <Link
+                href={`/studios/images?prompt=${encodeURIComponent(videoTitle)}`}
+                className="flex items-center justify-center gap-2 rounded-xl border border-pink-500/30 bg-pink-500/10 py-3 text-sm font-medium text-pink-300 hover:bg-pink-500/20 transition-colors"
+              >
+                <span>🎨</span>
+                فتح في استوديو توليد الصور
+              </Link>
+            )}
+          </>
         ) : (
           <GenerationHistory studioSlug="thumbnails" />
         )}

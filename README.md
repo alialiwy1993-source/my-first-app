@@ -21,10 +21,10 @@
 | 5 | 🎥 استوديو السوشيال | يوتيوب، تيك توك، إنستغرام | 🔜 M2 |
 | 6 | 📊 تحليل القنوات | تحليل وتحسين القنوات | 🔜 M2 |
 | 7 | 🖼️ الصور المصغرة | prompts وأفكار thumbnails | 🔜 M2 |
-| 8 | 🎨 توليد الصور | DALL·E 3 + معرض | 🔜 M3 |
+| 8 | 🎨 توليد الصور | DALL·E 3 + معرض + تنزيل | ✅ M3 |
 | 9 | 🔊 توليد الصوت | OpenAI TTS | 🔜 M4 |
 | 10 | 🎞️ توليد الفيديو | واجهة + stub | 🔜 M4 |
-| 11 | 📚 الكتب وأدوات AI | تلخيص + دليل أدوات | 🔜 M2 |
+| 11 | 📚 الكتب وأدوات AI | تلخيص + دليل أدوات | ✅ M2 |
 
 ---
 
@@ -154,7 +154,8 @@ ai-universal-assistant/
 | المتغير | الوصف | مطلوب |
 |---------|-------|--------|
 | `OPENAI_API_KEY` | مفتاح OpenAI API | ✅ |
-| `OPENAI_DEFAULT_MODEL` | الموديل الافتراضي (gpt-4o-mini) | اختياري |
+| `OPENAI_DEFAULT_MODEL` | الموديل الافتراضي للنص (gpt-4o-mini) | اختياري |
+| `OPENAI_IMAGE_MODEL` | موديل توليد الصور (dall-e-3) | اختياري |
 | `NEXT_PUBLIC_SUPABASE_URL` | رابط مشروع Supabase | ✅ |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | المفتاح العام | ✅ |
 | `SUPABASE_SERVICE_ROLE_KEY` | مفتاح الخدمة (سري) | ✅ |
@@ -193,9 +194,9 @@ npm run type-check   # فحص TypeScript
 | Milestone | المحتوى | الحالة |
 |-----------|---------|--------|
 | **M0** | Foundation + Database + Auth | ✅ مكتمل |
-| **M1** | Dashboard + Chat + Articles + Translation | 🔄 التالي |
-| **M2** | Research + Social + Channel + Thumbnails + Books | 🔜 |
-| **M3** | Image Studio (DALL·E) | 🔜 |
+| **M1** | Dashboard + Chat + Articles + Translation | ✅ مكتمل |
+| **M2** | Research + Social + Channel + Thumbnails + Books | ✅ مكتمل |
+| **M3** | Image Studio (DALL·E 3) + Gallery | ✅ مكتمل |
 | **M4** | Audio + Video Studios | 🔜 |
 
 ---
