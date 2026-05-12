@@ -3,9 +3,8 @@
 import { useEffect, useRef } from 'react'
 import ChatMessage from './ChatMessage'
 import ChatInput from './ChatInput'
-import type { ChatMessage as ChatMessageType } from '@/types/chat'
+import { ASSISTANT_TYPES, type ChatMessage as ChatMessageType } from '@/types/chat'
 import type { AssistantType } from '@/types/database'
-import { ASSISTANT_TYPES } from '@/types/chat'
 
 interface ChatWindowProps {
   messages: ChatMessageType[]

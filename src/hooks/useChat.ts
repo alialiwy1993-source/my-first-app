@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
-import type { Dispatch, SetStateAction } from 'react'
+import { useState, useCallback, useRef, type Dispatch, type SetStateAction } from 'react'
 import type { ChatMessage } from '@/types/chat'
 import type { AssistantType } from '@/types/database'
 import { generateId } from '@/lib/utils'

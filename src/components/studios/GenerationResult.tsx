@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer'
 import Spinner from '@/components/ui/Spinner'
-import { copyToClipboard, downloadAsText } from '@/lib/utils'
+import { copyToClipboard, downloadAsText, cn } from '@/lib/utils'
 import { useToast, Toast } from '@/components/ui/Toast'
-import { cn } from '@/lib/utils'
 
 interface GenerationResultProps {
   result: string

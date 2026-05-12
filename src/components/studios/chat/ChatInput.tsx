@@ -1,7 +1,6 @@
 'use client'
 
-import type { KeyboardEvent } from 'react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, type KeyboardEvent } from 'react'
 import { cn } from '@/lib/utils'
 import Spinner from '@/components/ui/Spinner'
 
