@@ -1,10 +1,10 @@
-name: Build Loan Booking Windows EXE
+name: Build Loan Booking Exact v1 Windows EXE
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - loan-booking-windows
+      - loan-booking-exact-v1
 
 jobs:
   build-windows:
@@ -22,19 +22,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Installer and Portable EXE
+      - name: Build exact v1 Installer and Portable EXE
         run: npm run dist
 
       - name: Show generated files
         shell: pwsh
-        run: Get-ChildItem -Path dist -Recurse -File | Select-Object FullName, Length
+        run: Get-ChildItem -Path release -Recurse -File | Select-Object FullName, Length
 
       - name: Upload Windows EXE files
         uses: actions/upload-artifact@v4
         with:
-          name: Loan-Booking-Windows
-          path: |
-            dist/installer/*.exe
-            dist/portable/*.exe
+          name: Loan-Booking-Exact-v1-Windows
+          path: release/*.exe
           if-no-files-found: error
           retention-days: 30
