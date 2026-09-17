@@ -1,7 +1,7 @@
 {
   "name": "loan-booking-desktop",
-  "version": "1.0.0",
-  "description": "برنامج حجز السلف - نسخة سطح المكتب",
+  "version": "2.0.0",
+  "description": "برنامج حجز السلف - نسخة سطح المكتب المستقلة",
   "main": "main.js",
   "author": "Loan Booking System",
   "license": "UNLICENSED",
@@ -10,6 +10,9 @@
     "dist:installer": "electron-builder --win nsis --x64 --publish never --config.directories.output=dist/installer",
     "dist:portable": "electron-builder --win portable --x64 --publish never --config.directories.output=dist/portable",
     "dist": "npm run dist:installer && npm run dist:portable"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "electron": "^43.7.1",
@@ -21,6 +24,7 @@
     "asar": true,
     "files": [
       "main.js",
+      "preload.js",
       "offline.html",
       "package.json"
     ],
