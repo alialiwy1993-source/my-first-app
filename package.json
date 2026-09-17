@@ -7,8 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "dist:installer": "electron-builder --win nsis --x64 --config.directories.output=dist/installer",
-    "dist:portable": "electron-builder --win portable --x64 --config.directories.output=dist/portable",
+    "dist:installer": "electron-builder --win nsis --x64 --publish never --config.directories.output=dist/installer",
+    "dist:portable": "electron-builder --win portable --x64 --publish never --config.directories.output=dist/portable",
     "dist": "npm run dist:installer && npm run dist:portable"
   },
   "devDependencies": {
