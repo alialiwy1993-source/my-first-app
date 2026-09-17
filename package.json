@@ -1,31 +1,41 @@
 {
-  "name": "loan-booking-desktop",
-  "version": "2.1.0",
-  "description": "برنامج حجز السلف - نسخة سطح المكتب المستقلة",
+  "name": "loan-booking-exact-v1",
+  "version": "3.0.0",
+  "description": "برنامج حجز السلف - النسخة المطابقة لواجهة v1 الأصلية",
   "main": "main.js",
   "author": "Loan Booking System",
   "license": "UNLICENSED",
   "scripts": {
+    "dev": "vite",
+    "build:web": "vite build",
     "start": "electron .",
-    "dist:installer": "electron-builder --win nsis --x64 --publish never --config.directories.output=dist/installer",
-    "dist:portable": "electron-builder --win portable --x64 --publish never --config.directories.output=dist/portable",
-    "dist": "npm run dist:installer && npm run dist:portable"
+    "dist:installer": "npm run build:web && electron-builder --win nsis --x64 --publish never --config.directories.output=release/installer",
+    "dist:portable": "npm run build:web && electron-builder --win portable --x64 --publish never --config.directories.output=release/portable",
+    "dist": "npm run build:web && electron-builder --win nsis portable --x64 --publish never --config.directories.output=release"
   },
   "dependencies": {
+    "lucide-react": "^0.469.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
     "electron": "^43.7.1",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
   },
   "build": {
-    "appId": "iq.loanbooking.desktop",
+    "appId": "iq.loanbooking.exactv1",
     "productName": "برنامج حجز السلف",
     "asar": true,
     "files": [
       "main.js",
       "preload.js",
-      "offline.html",
+      "dist/**/*",
       "package.json"
     ],
     "win": {
@@ -33,7 +43,7 @@
         { "target": "nsis", "arch": ["x64"] },
         { "target": "portable", "arch": ["x64"] }
       ],
-      "artifactName": "Loan-Booking-${version}-${arch}.${ext}"
+      "artifactName": "Loan-Booking-Exact-v1-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
