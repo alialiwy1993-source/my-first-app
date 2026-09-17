@@ -36,8 +36,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "برنامج حجز السلف",
-      "installerLanguages": ["Arabic", "English"]
+      "shortcutName": "برنامج حجز السلف"
     }
   }
 }
