@@ -1,0 +1,40 @@
+name: Build Loan Booking Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - loan-booking-windows
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Installer and Portable EXE
+        run: npm run dist
+
+      - name: Show generated files
+        shell: pwsh
+        run: Get-ChildItem -Path dist -Recurse -File | Select-Object FullName, Length
+
+      - name: Upload Windows EXE files
+        uses: actions/upload-artifact@v4
+        with:
+          name: Loan-Booking-Windows
+          path: |
+            dist/installer/*.exe
+            dist/portable/*.exe
+          if-no-files-found: error
+          retention-days: 30
