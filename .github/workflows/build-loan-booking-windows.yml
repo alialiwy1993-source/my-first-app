@@ -24,17 +24,48 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install
+        shell: pwsh
+        run: npm install *>&1 | Tee-Object -FilePath install.log
 
       - name: Build Installer and Portable EXE
-        run: npm run dist
+        id: build
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          npm run dist *>&1 | Tee-Object -FilePath build.log
+          if ($LASTEXITCODE -ne 0) {
+            "BUILD_FAILED=$LASTEXITCODE" | Out-File -FilePath build-status.txt -Encoding utf8
+          } else {
+            "BUILD_OK=1" | Out-File -FilePath build-status.txt -Encoding utf8
+          }
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Loan-Booking-Build-Logs
+          path: |
+            install.log
+            build.log
+            build-status.txt
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Upload Windows EXE files
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Loan-Booking-Windows
           path: |
             dist/installer/*.exe
             dist/portable/*.exe
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
+
+      - name: Fail job if build failed
+        shell: pwsh
+        run: |
+          if (Test-Path build-status.txt) {
+            $status = Get-Content build-status.txt -Raw
+            if ($status -match 'BUILD_FAILED') { exit 1 }
+          }
