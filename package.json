@@ -1,0 +1,44 @@
+{
+  "name": "loan-booking-desktop",
+  "version": "1.0.0",
+  "description": "برنامج حجز السلف - نسخة سطح المكتب",
+  "main": "main.js",
+  "author": "Loan Booking System",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^43.7.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "iq.loanbooking.desktop",
+    "productName": "برنامج حجز السلف",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "offline.html",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "artifactName": "Loan-Booking-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "برنامج حجز السلف",
+      "installerLanguages": ["Arabic", "English"]
+    }
+  }
+}
