@@ -1,0 +1,40 @@
+name: Build Loan Booking Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-loan-booking-windows.yml'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Windows source branch
+        uses: actions/checkout@v4
+        with:
+          ref: loan-booking-windows
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Installer and Portable EXE
+        run: npm run dist
+
+      - name: Upload Windows EXE files
+        uses: actions/upload-artifact@v4
+        with:
+          name: Loan-Booking-Windows
+          path: |
+            dist/installer/*.exe
+            dist/portable/*.exe
+          if-no-files-found: error
+          retention-days: 30
