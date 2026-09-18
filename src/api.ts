@@ -1,14 +1,7 @@
 import type { Session } from './types';
 
 const SESSION_KEY = 'loan-booking-session-v3';
-
-declare global {
-  interface Window {
-    loanAPI: {
-      post: (path: string, data?: Record<string, unknown>) => Promise<unknown>;
-    };
-  }
-}
+const API_URL = 'https://qolltaepagnlajnyofbk.supabase.co/functions/v1/loan-exact-api';
 
 export function readSession(): Session | null {
   try {
@@ -28,9 +21,21 @@ export function clearSession() {
 }
 
 async function post<T>(path: string, data: Record<string, unknown> = {}): Promise<T> {
-  const response = await window.loanAPI.post(path, data) as T & { error?: string; status?: number };
-  if (response && typeof response === 'object' && 'error' in response && response.error) {
-    throw new Error(response.error);
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ path, data }),
+  });
+
+  let response: (T & { error?: string }) | null = null;
+  try {
+    response = await res.json();
+  } catch {
+    throw new Error('تعذر قراءة استجابة الخادم المركزي');
+  }
+
+  if (!res.ok || (response && typeof response === 'object' && 'error' in response && response.error)) {
+    throw new Error(response?.error || 'تعذر الاتصال بالخادم المركزي');
   }
   return response as T;
 }
