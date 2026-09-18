@@ -1,7 +1,7 @@
 {
   "name": "loan-booking-exact-v1",
-  "version": "3.0.0",
-  "description": "برنامج حجز السلف - النسخة المطابقة لواجهة v1 الأصلية",
+  "version": "3.1.0",
+  "description": "برنامج حجز السلف - النسخة المطابقة مع قاعدة بيانات مركزية مشتركة",
   "main": "main.js",
   "author": "Loan Booking System",
   "license": "UNLICENSED",
@@ -40,8 +40,18 @@
     ],
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "artifactName": "Loan-Booking-Exact-v1-${version}-${arch}.${ext}"
     },
